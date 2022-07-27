@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import PostLink from "../components/PostLink";
 import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
@@ -8,8 +9,9 @@ const Home: NextPage = () => {
   return (
     <>
       <h1>Posts</h1>
+
       {posts.data?.posts?.map((item) => {
-        return <p key={item.title}>{item.title}</p>;
+        return <PostLink key={item.title} post={item} />;
       })}
     </>
   );
