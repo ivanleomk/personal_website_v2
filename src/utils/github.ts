@@ -38,11 +38,14 @@ export const getPublishedPosts: () => Promise<githubPostTitle[]> = async () => {
         }
       `);
 
-  return repository.issues.edges
-    .map(({ node }) => {
-      return { ...node };
-    })
-    .filter((post: githubPostTitle) => {
-      return post.labels.nodes[0].name === "published";
-    });
+  return (
+    repository.issues.edges
+      //@ts-ignore
+      .map(({ node }) => {
+        return { ...node };
+      })
+      .filter((post: githubPostTitle) => {
+        return post.labels.nodes[0].name === "published";
+      })
+  );
 };
