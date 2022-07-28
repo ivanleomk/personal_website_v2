@@ -1,4 +1,8 @@
-import { getPostByTitle, getPublishedPosts } from "../../utils/github";
+import {
+  getPostByIssueId,
+  getPostIds,
+  githubComment,
+} from "../../utils/github";
 import matter from "gray-matter";
 
 import { unified } from "unified";
@@ -6,17 +10,28 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import Link from "next/link";
+import { classNames } from "../../utils/tailwind";
+import PostComment from "../../components/PostComment";
+import { renderToHTML } from "../../utils/string";
 
 type BlogPostProps = {
   title: string;
   content: string;
+  createdAt: string;
+  comments: githubComment[];
 };
 
 type BlogPostParams = {
   params: { issueId: string };
 };
 
-export default function BlogPost({ title, content }: BlogPostProps) {
+export default function BlogPost({
+  title,
+  content,
+  createdAt,
+  comments,
+}: BlogPostProps) {
+  console.log(comments);
   return (
     <>
       <Link
@@ -26,13 +41,23 @@ export default function BlogPost({ title, content }: BlogPostProps) {
       >
         <p> ← Go Back Home</p>
       </Link>
-      <div className="prose mx-auto">
-        <h1>{title}</h1>
-        <div
-          dangerouslySetInnerHTML={{
-            __html: content,
-          }}
-        />
+      <div className="flex items-center justify-center flex-col">
+        <div className="prose">
+          <h1 className="mb-5">{title}</h1>
+
+          <div
+            dangerouslySetInnerHTML={{
+              __html: content,
+            }}
+          />
+        </div>
+        <div>
+          <div className="max-w-xl">
+            {comments.map((comment, index) => {
+              return <PostComment key={index} {...comment} index={index} />;
+            })}
+          </div>
+        </div>
       </div>
     </>
   );
@@ -40,27 +65,30 @@ export default function BlogPost({ title, content }: BlogPostProps) {
 
 export async function getStaticProps({ params }: BlogPostParams) {
   const { issueId } = params;
-  console.log(issueId);
-  const post = await getPostByTitle(parseInt(issueId));
-  const { title, body } = post;
+  const post = await getPostByIssueId(parseInt(issueId));
+  const { title, body, createdAt, comments: rawComments } = post;
+  const parsedComments = rawComments.edges.map((edge) => {
+    return {
+      ...edge.node,
+    };
+  });
   const { content: parsedBody } = matter(body);
 
-  const content = await unified()
-    .use(remarkParse)
-    .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeStringify, { allowDangerousHtml: true })
-    .process(parsedBody);
+  const content = await renderToHTML(parsedBody);
 
   return {
     props: {
       content: String(content),
+      title,
+      createdAt,
+      comments: parsedComments,
     },
   };
 }
 
 export async function getStaticPaths() {
-  const posts = await getPublishedPosts();
-  const paths = posts.map((post) => `/blog/${post.number}`);
+  const posts = await getPostIds();
+  const paths = posts.map((issueId) => `/blog/${issueId}`);
 
   return {
     paths,

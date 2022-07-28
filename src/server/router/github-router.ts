@@ -1,6 +1,6 @@
 import { createRouter } from "./context";
 import { z } from "zod";
-import { getPostByTitle, getPublishedPosts } from "../../utils/github";
+import { getPostByIssueId, getPublishedPosts } from "../../utils/github";
 
 export const githubRouter = createRouter()
   .query("get-posts", {
@@ -14,7 +14,7 @@ export const githubRouter = createRouter()
   .query("getPost", {
     input: z.object({ issueId: z.number() }),
     async resolve({ input }) {
-      const post = getPostByTitle(input.issueId);
+      const post = getPostByIssueId(input.issueId);
       return {
         post: null,
       };

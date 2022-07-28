@@ -16,12 +16,25 @@ export type githubPostTitle = {
   } | null;
 };
 
+export type githubComment = {
+  author: {
+    avatarUrl: string;
+    login: string;
+  };
+  createdAt: string;
+  body: string;
+};
+
 export type githubPost = {
   title: string;
   number: string;
   createdAt: string;
-  bodyHTML: string;
   body: string;
+  comments: {
+    edges: {
+      node: githubComment;
+    }[];
+  };
 };
 
 const graphqlWithAuth = graphql.defaults({
@@ -30,9 +43,9 @@ const graphqlWithAuth = graphql.defaults({
   },
 });
 
-export const getPostByTitle: (issueId: number) => Promise<githubPost> = async (
-  issueId
-) => {
+export const getPostByIssueId: (
+  issueId: number
+) => Promise<githubPost> = async (issueId) => {
   const { repository } = await graphqlWithAuth(
     `query getPost($number: Int!){
       repository(owner: "ivanleomk", name: "personal_website_v2") {
@@ -40,8 +53,19 @@ export const getPostByTitle: (issueId: number) => Promise<githubPost> = async (
             title
             number
             createdAt
-            bodyHTML
             body
+            comments(first:100) {
+      			  edges {
+      			    node {
+      			      author{
+                    avatarUrl
+                    login
+                  }
+                  createdAt
+                  body
+      			    }
+      			  }
+      			}
         }
       }
   }
@@ -52,6 +76,27 @@ export const getPostByTitle: (issueId: number) => Promise<githubPost> = async (
   );
 
   return repository.issue;
+};
+
+export const getPostIds: () => Promise<number[]> = async () => {
+  const { repository } = await graphqlWithAuth(
+    `query getPostIds {
+      repository(owner: "ivanleomk", name: "personal_website_v2") {
+        issues(last: 100) {
+            nodes {
+                number
+            }
+        }
+      }
+  }
+`,
+    {}
+  );
+
+  // Quick Type Definition here
+  return repository.issues.nodes.map((issue: { number: string }) =>
+    parseInt(issue.number)
+  );
 };
 
 export const getPublishedPosts: () => Promise<githubPostTitle[]> = async () => {
