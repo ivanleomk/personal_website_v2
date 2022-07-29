@@ -23,14 +23,18 @@ export default function BlogPost({ title, content, createdAt }: BlogPostProps) {
       >
         <p> ← Go Back Home</p>
       </Link>
-      <div className="flex items-center justify-center flex-col">
-        <div className="prose">
-          <h1 className="mb-5">{title}</h1>
+      <div className="flex items-center justify-center flex-col ">
+        <h1 className="mb-10">{title}</h1>
+        <div className="xl:grid xl:grid-cols-7 xl:w-full xl:max-w-7xl">
           <div
+            className="max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-4xl xl:col-span-4 prose xl:prose-lg px-4"
             dangerouslySetInnerHTML={{
               __html: content,
             }}
           />
+          <div className="xl:col-span-3 mx-10 bg-red-400">
+            Table of Contents
+          </div>
         </div>
       </div>
     </>
