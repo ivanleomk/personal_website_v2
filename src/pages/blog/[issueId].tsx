@@ -1,11 +1,6 @@
-import {
-  getPostByIssueId,
-  getPostIds,
-  githubComment,
-} from "../../utils/github";
+import { getPostByIssueId, getPostIds } from "../../utils/github";
 import matter from "gray-matter";
 import Link from "next/link";
-import PostComment from "../../components/PostComment";
 import { renderToHTML } from "../../utils/string";
 
 type BlogPostProps = {
