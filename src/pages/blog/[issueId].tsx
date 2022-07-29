@@ -4,13 +4,7 @@ import {
   githubComment,
 } from "../../utils/github";
 import matter from "gray-matter";
-
-import { unified } from "unified";
-import remarkParse from "remark-parse";
-import remarkRehype from "remark-rehype";
-import rehypeStringify from "rehype-stringify";
 import Link from "next/link";
-import { classNames } from "../../utils/tailwind";
 import PostComment from "../../components/PostComment";
 import { renderToHTML } from "../../utils/string";
 
@@ -44,7 +38,6 @@ export default function BlogPost({
       <div className="flex items-center justify-center flex-col">
         <div className="prose">
           <h1 className="mb-5">{title}</h1>
-
           <div
             dangerouslySetInnerHTML={{
               __html: content,
@@ -53,9 +46,10 @@ export default function BlogPost({
         </div>
         <div>
           <div className="max-w-xl">
-            {comments.map((comment, index) => {
-              return <PostComment key={index} {...comment} index={index} />;
-            })}
+            {comments &&
+              comments.map((comment, index) => {
+                return <PostComment key={index} {...comment} index={index} />;
+              })}
           </div>
         </div>
       </div>

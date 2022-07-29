@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { VFileWithOutput } from "unified";
 import { githubComment } from "../utils/github";
 import { renderToHTML } from "../utils/string";
 import { classNames } from "../utils/tailwind";
@@ -14,7 +15,8 @@ const PostComment = ({
   index,
 }: PostCommentProps) => {
   const [loading, setLoading] = useState(true);
-  const [renderedHTML, setRenderedHTML] = useState<any>();
+  const [renderedHTML, setRenderedHTML] =
+    useState<VFileWithOutput<void> | null>(null);
 
   useEffect(() => {
     renderToHTML(body).then((res) => {
@@ -23,7 +25,7 @@ const PostComment = ({
     });
   });
 
-  if (loading) {
+  if (loading || !renderedHTML) {
     return null;
   }
 
@@ -49,7 +51,7 @@ const PostComment = ({
 
         <div
           dangerouslySetInnerHTML={{
-            __html: renderedHTML,
+            __html: String(renderedHTML),
           }}
         />
       </div>
