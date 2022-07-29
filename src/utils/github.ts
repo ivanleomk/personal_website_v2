@@ -16,25 +16,11 @@ export type githubPostTitle = {
   } | null;
 };
 
-export type githubComment = {
-  author: {
-    avatarUrl: string;
-    login: string;
-  };
-  createdAt: string;
-  body: string;
-};
-
 export type githubPost = {
   title: string;
   number: string;
   createdAt: string;
   body: string;
-  comments: {
-    edges: {
-      node: githubComment;
-    }[];
-  };
 };
 
 const graphqlWithAuth = graphql.defaults({
@@ -54,18 +40,7 @@ export const getPostByIssueId: (
             number
             createdAt
             body
-            comments(first:100) {
-      			  edges {
-      			    node {
-      			      author{
-                    avatarUrl
-                    login
-                  }
-                  createdAt
-                  body
-      			    }
-      			  }
-      			}
+            
         }
       }
   }

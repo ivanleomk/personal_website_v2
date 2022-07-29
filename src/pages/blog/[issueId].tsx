@@ -12,20 +12,13 @@ type BlogPostProps = {
   title: string;
   content: string;
   createdAt: string;
-  comments: githubComment[];
 };
 
 type BlogPostParams = {
   params: { issueId: string };
 };
 
-export default function BlogPost({
-  title,
-  content,
-  createdAt,
-  comments,
-}: BlogPostProps) {
-  console.log(comments);
+export default function BlogPost({ title, content, createdAt }: BlogPostProps) {
   return (
     <>
       <Link
@@ -44,14 +37,6 @@ export default function BlogPost({
             }}
           />
         </div>
-        <div>
-          <div className="max-w-xl">
-            {comments &&
-              comments.map((comment, index) => {
-                return <PostComment key={index} {...comment} index={index} />;
-              })}
-          </div>
-        </div>
       </div>
     </>
   );
@@ -60,12 +45,8 @@ export default function BlogPost({
 export async function getStaticProps({ params }: BlogPostParams) {
   const { issueId } = params;
   const post = await getPostByIssueId(parseInt(issueId));
-  const { title, body, createdAt, comments: rawComments } = post;
-  const parsedComments = rawComments.edges.map((edge) => {
-    return {
-      ...edge.node,
-    };
-  });
+  const { title, body, createdAt } = post;
+
   const { content: parsedBody } = matter(body);
 
   const content = await renderToHTML(parsedBody);
@@ -75,7 +56,6 @@ export async function getStaticProps({ params }: BlogPostParams) {
       content: String(content),
       title,
       createdAt,
-      comments: parsedComments,
     },
   };
 }
