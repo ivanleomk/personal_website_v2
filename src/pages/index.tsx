@@ -9,15 +9,14 @@ type HomePageProps = {
 };
 
 const Home = ({ posts }: HomePageProps) => {
-  console.log(posts);
   return (
     <div className="flex items-center justify-center mt-10">
       <div className="max-w-4xl w-full ">
         <div>
           <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-            Yo I &apos m Ivan
+            Yo I&apos;m Ivan
           </h2>
-          <p className="text-xl text-gray-500">I&aposm a software engineer</p>
+          <p className="text-xl text-gray-500">I&apos;m a software engineer</p>
         </div>
         <div className="container mx-auto mt-10">
           <div className="max-w-lg">
