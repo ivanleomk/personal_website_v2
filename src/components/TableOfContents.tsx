@@ -6,7 +6,6 @@ import PostHeaderLink from "./PostHeaderLink";
 const TableOfContents = () => {
   const { nestedHeadings } = useHeadingsData();
   const [activeId, setActiveId] = useState();
-  console.log(activeId);
 
   useIntersectionObserver(setActiveId);
 
@@ -19,7 +18,7 @@ const TableOfContents = () => {
         bottom: "30px",
       }}
     >
-      <div className="cursor-pointer text-xl py-10 px-4">
+      <div className="hidden xl:block xl:cursor-pointer xl:text-xl xl:py-10 xl:px-4">
         <ul>
           <PostHeaderLink links={nestedHeadings} activeId={activeId} />
         </ul>

@@ -17,7 +17,7 @@ const PostHeaderLink = ({ links, activeId }: PostHeaderLinkProps) => {
       {links &&
         links.map(({ id, children, text }, index) => {
           return (
-            <li className="my-5" key={id}>
+            <li className="mt-5" key={id}>
               <a
                 className={id === activeId ? "text-blue-600" : ""}
                 href={`#${id}`}
@@ -31,7 +31,7 @@ const PostHeaderLink = ({ links, activeId }: PostHeaderLinkProps) => {
               >
                 {text}
               </a>
-              <ul className="ml-10">
+              <ul className="pl-10">
                 {children.map((child, index) => {
                   return (
                     <PostHeaderLink
@@ -47,44 +47,6 @@ const PostHeaderLink = ({ links, activeId }: PostHeaderLinkProps) => {
         })}
     </>
   );
-  //   return (
-  //     {nestedHeadings.map((heading) => (
-  //         <li key={heading.id}>
-  //           <a
-  //             className={heading.id === activeId ? "text-blue-600" : ""}
-  //             href={`#${heading.id}`}
-  //             onClick={(e) => {
-  //               e.preventDefault();
-  //               document.querySelector(`#${heading.id}`).scrollIntoView({
-  //                 behavior: "smooth",
-  //               });
-  //             }}
-  //           >
-  //             {heading.text}
-  //           </a>
-  //           {heading.children.length > 0 && (
-  //             <ul className="list-disc pl-10">
-  //               {heading.children.map((child) => (
-  //                 <li key={child.id}>
-  //                   <a
-  //                     onClick={(e) => {
-  //                       e.preventDefault();
-  //                       document.querySelector(`#${child.id}`).scrollIntoView({
-  //                         behavior: "smooth",
-  //                       });
-  //                     }}
-  //                     className={child.id === activeId ? "text-blue-600" : ""}
-  //                     href={`#${child.id}`}
-  //                   >
-  //                     {child.text}
-  //                   </a>
-  //                 </li>
-  //               ))}
-  //             </ul>
-  //           )}
-  //         </li>
-  //       ))}
-  //   )
 };
 
 export default PostHeaderLink;

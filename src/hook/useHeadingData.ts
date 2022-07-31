@@ -13,6 +13,9 @@ const useHeadingsData = () => {
         //@ts-ignore
         const newId = slugify(elem.outerText);
         elem.setAttribute("id", newId);
+
+        //@ts-ignore
+        elem.style.paddingTop = "30px";
       });
 
     // A bit kooky stuff, just ts-ignore and move on
