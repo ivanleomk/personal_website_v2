@@ -1,4 +1,8 @@
-import { getPostByIssueId, getPostIds } from "../../utils/github";
+import {
+  getPostByIssueId,
+  getPostIds,
+  getSinglePost,
+} from "../../utils/github";
 import matter from "gray-matter";
 import Link from "next/link";
 import { renderToHTML, slugify } from "../../utils/string";
@@ -12,7 +16,7 @@ type BlogPostProps = {
 };
 
 type BlogPostParams = {
-  params: { issueId: string };
+  params: { slug: string };
 };
 
 export default function BlogPost({ title, content, createdAt }: BlogPostProps) {
@@ -43,8 +47,9 @@ export default function BlogPost({ title, content, createdAt }: BlogPostProps) {
 }
 
 export async function getStaticProps({ params }: BlogPostParams) {
-  const { issueId } = params;
-  const post = await getPostByIssueId(parseInt(issueId));
+  const { slug } = params;
+  // const post = await getPostByIssueId(parseInt(issueId));
+  const post = await getSinglePost(slugify(slug));
   const { title, body, createdAt } = post;
 
   const { content: parsedBody } = matter(body);
@@ -56,14 +61,13 @@ export async function getStaticProps({ params }: BlogPostParams) {
       content: String(content),
       title,
       createdAt,
-      rawContent: body,
     },
   };
 }
 
 export async function getStaticPaths() {
   const posts = await getPostIds();
-  const paths = posts.map((issueId) => `/blog/${issueId}`);
+  const paths = posts.map((issueId) => `/blog/${slugify(issueId)}`);
 
   return {
     paths,

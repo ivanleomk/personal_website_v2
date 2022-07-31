@@ -1,5 +1,6 @@
 import { graphql } from "@octokit/graphql";
 import matter from "gray-matter";
+import { slugify } from "./string";
 
 type githubPostStatus = "draft" | "published";
 export type githubPostTitle = {
@@ -29,6 +30,36 @@ const graphqlWithAuth = graphql.defaults({
   },
 });
 
+export const getSinglePost: (slug: string) => Promise<githubPost> = async (
+  slug: string
+) => {
+  const { repository } = await graphqlWithAuth(
+    `
+    query getPost{
+      repository(owner: "ivanleomk", name: "personal_website_v2") {
+        issues(last:100){
+          edges{
+            node{
+              title
+              number
+              createdAt
+              body
+            }
+          }
+        }
+      }
+}
+    `
+  );
+
+  //@ts-ignore
+  const post = repository.issues.edges.filter((issue) => {
+    return slugify(issue.node.title) === slug;
+  })[0].node;
+
+  return post;
+};
+
 export const getPostByIssueId: (
   issueId: number
 ) => Promise<githubPost> = async (issueId) => {
@@ -53,33 +84,29 @@ export const getPostByIssueId: (
   return repository.issue;
 };
 
-export const getPostIds: () => Promise<number[]> = async () => {
+export const getPostIds: () => Promise<string[]> = async () => {
   const { repository } = await graphqlWithAuth(
     `query getPostIds {
       repository(owner: "ivanleomk", name: "personal_website_v2") {
         issues(last: 100) {
             nodes {
-                number
+                title
             }
         }
       }
   }
-`,
-    {}
+`
   );
 
   // Quick Type Definition here
-  return repository.issues.nodes.map((issue: { number: string }) =>
-    parseInt(issue.number)
-  );
+  return repository.issues.nodes.map((issue: { title: string }) => issue.title);
 };
 
 export const getPublishedPosts: () => Promise<githubPostTitle[]> = async () => {
-  // TODO: I'll figure it out when I get to beyond 50 posts
   const { repository } = await graphqlWithAuth(`
         {
           repository(owner: "ivanleomk", name: "personal_website_v2") {
-            issues(last: 50) {
+            issues(last: 10) {
               edges {
                 node {
                     number
@@ -102,10 +129,11 @@ export const getPublishedPosts: () => Promise<githubPostTitle[]> = async () => {
     repository.issues.edges
       //@ts-ignore
       .map(({ node }) => {
-        return { ...node };
+        const { data } = matter(node.body);
+        return { ...node, attributes: data };
       })
       .filter((post: githubPostTitle) => {
-        return post.labels.nodes[0].name === "published";
+        return post.labels.nodes.some((label) => label.name === "published");
       })
   );
 };

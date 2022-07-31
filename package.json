@@ -17,6 +17,7 @@
     "@trpc/next": "^9.26.2",
     "@trpc/react": "^9.26.2",
     "@trpc/server": "^9.26.2",
+    "dayjs": "^1.11.4",
     "gray-matter": "^4.0.3",
     "next": "12.2.3",
     "next-auth": "^4.10.2",
