@@ -8,6 +8,7 @@ import Link from "next/link";
 import { renderToHTML, slugify } from "../../utils/string";
 import { useEffect } from "react";
 import TableOfContents from "../../components/TableOfContents";
+import dayjs from "dayjs";
 
 type BlogPostProps = {
   title: string;
@@ -22,15 +23,11 @@ type BlogPostParams = {
 export default function BlogPost({ title, content, createdAt }: BlogPostProps) {
   return (
     <>
-      <Link
-        href={{
-          pathname: "/",
-        }}
-      >
-        <p> ← Go Back Home</p>
-      </Link>
-      <div className="flex items-center justify-center flex-col ">
-        <h1 className="mb-10">{title}</h1>
+      <div className="flex items-center justify-center flex-col mb-40">
+        <h1 className="mb-10 font-extrabold text-2xl ">{title}</h1>
+        <p className="cursor-pointer hover:underline">
+          Published on {dayjs(createdAt).format("DD-MM-YYYY")}
+        </p>
         <div className="xl:grid xl:grid-cols-7 xl:w-full xl:max-w-7xl">
           <div
             id="content"

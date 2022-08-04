@@ -7,6 +7,7 @@ import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
 import ConstrainedWidth from "../layout/ConstrainedWidth";
 import Head from "next/head";
+import Header from "../components/Header";
 
 const MyApp: AppType = ({
   Component,

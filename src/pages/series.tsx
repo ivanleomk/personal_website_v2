@@ -1,5 +1,10 @@
 import React from "react";
-import { getPublishedPosts, githubPost } from "../utils/github";
+import PostLink from "../components/PostLink";
+import {
+  getPublishedPosts,
+  githubPost,
+  githubPostTitle,
+} from "../utils/github";
 
 type SeriesType = {
   title: string;
@@ -8,18 +13,18 @@ type SeriesType = {
 };
 
 type SeriesProps = {
-  posts: githubPost[];
+  posts: githubPostTitle[];
 };
 
-// const SeriesData: SeriesType[] = [
-//   {
-//     title: "Build A Blog with the T3 Stack",
-//     postIssueId:
-//   }
-// ]
+const SeriesData: SeriesType[] = [
+  {
+    title: "Build A Blog with the T3 Stack",
+    postIssueId: [1, 3, 4, 5],
+    description: "in this series, we build a small blog using the T3 stack.",
+  },
+];
 
 const Series = ({ posts }: SeriesProps) => {
-  console.log(posts);
   return (
     <>
       <div>
@@ -33,8 +38,26 @@ const Series = ({ posts }: SeriesProps) => {
       <div className="container mx-auto mt-10">
         <div className="max-w-2xl">
           <div className="flex flex-col items-start justify-content">
-            <h1 className="font-bold text-lg tracking-tight">Latest Series</h1>
-            <ul>Posts</ul>
+            <h1 className="font-bold text-2xl tracking-tight">Latest Series</h1>
+            {posts &&
+              SeriesData.map((item) => {
+                return (
+                  <>
+                    <div className="mt-4 font-bold">{item.title}</div>
+                    <div className="mt-2">{item.description}</div>
+                    <ul className="pl-4 mt-4">
+                      {item.postIssueId.map((id) => {
+                        const postInformation = posts[id] as githubPostTitle;
+                        return (
+                          <li key={postInformation.title}>
+                            <PostLink post={postInformation} />
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </>
+                );
+              })}
           </div>
         </div>
       </div>
@@ -44,15 +67,18 @@ const Series = ({ posts }: SeriesProps) => {
 
 export async function getStaticProps() {
   const posts = await getPublishedPosts();
+  const issueIdToPost: {
+    [key: string]: githubPostTitle;
+  } = {};
+
+  posts.forEach((item) => {
+    issueIdToPost[item.number] = {
+      ...item,
+    };
+  });
   return {
     props: {
-      posts: posts.map((item) => {
-        return {
-          issueId: item.number,
-          title: item.title,
-          dateCreated: item.createdAt,
-        };
-      }),
+      posts: issueIdToPost,
     },
   };
 }
