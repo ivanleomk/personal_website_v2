@@ -1,5 +1,5 @@
 import React from "react";
-import { getPublishedPosts } from "../utils/github";
+import { getPublishedPosts, githubPost } from "../utils/github";
 
 type SeriesType = {
   title: string;
@@ -7,7 +7,18 @@ type SeriesType = {
   description: string;
 };
 
-const Series = ({ posts }) => {
+type SeriesProps = {
+  posts: githubPost[];
+};
+
+// const SeriesData: SeriesType[] = [
+//   {
+//     title: "Build A Blog with the T3 Stack",
+//     postIssueId:
+//   }
+// ]
+
+const Series = ({ posts }: SeriesProps) => {
   console.log(posts);
   return (
     <>
@@ -35,7 +46,13 @@ export async function getStaticProps() {
   const posts = await getPublishedPosts();
   return {
     props: {
-      posts,
+      posts: posts.map((item) => {
+        return {
+          issueId: item.number,
+          title: item.title,
+          dateCreated: item.createdAt,
+        };
+      }),
     },
   };
 }
