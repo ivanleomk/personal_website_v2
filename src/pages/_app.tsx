@@ -5,15 +5,26 @@ import type { AppType } from "next/dist/shared/lib/utils";
 import superjson from "superjson";
 import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
+import ConstrainedWidth from "../layout/ConstrainedWidth";
+import Head from "next/head";
 
 const MyApp: AppType = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <SessionProvider session={session}>
-      <Component {...pageProps} />
-    </SessionProvider>
+    <ConstrainedWidth>
+      <Head>
+        <script
+          defer
+          data-domain="ivanleo.com"
+          src="https://plausible.io/js/plausible.js"
+        ></script>
+      </Head>
+      <SessionProvider session={session}>
+        <Component {...pageProps} />
+      </SessionProvider>
+    </ConstrainedWidth>
   );
 };
 
