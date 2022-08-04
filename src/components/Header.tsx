@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
-import { FiTwitter } from "react-icons/Fi";
-import { FaGithub } from "react-icons/Fa";
+
+import Image from "next/image";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -23,13 +23,18 @@ const Header = () => {
           );
         })}
       </div>
-      <div className="flex items-center space-x-6">
-        <Link href={"https://twitter.com/ivanleomk"}>
-          <FiTwitter className="h-6 w-6 cursor-pointer" />
-        </Link>
-        <Link href={"https://github.com/ivanleomk"}>
-          <FaGithub className="h-6 w-6 cursor-pointer " />
-        </Link>
+      <div className="flex items-center">
+        <span className="mx-4 cursor-pointer">
+          <Link href={"https://twitter.com/ivanleomk"}>
+            <Image src={`/twitter.svg`} width={32} height={32} alt="twitter" />
+          </Link>
+        </span>
+
+        <span className="mx-4 cursor-pointer">
+          <Link href={"https://github.com/ivanleomk"}>
+            <Image src={`/github.svg`} width={32} height={32} alt="Github" />
+          </Link>
+        </span>
       </div>
     </nav>
   );
