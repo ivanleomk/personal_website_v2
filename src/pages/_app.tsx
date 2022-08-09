@@ -9,10 +9,7 @@ import ConstrainedWidth from "../layout/ConstrainedWidth";
 import Head from "next/head";
 import Header from "../components/Header";
 
-const MyApp: AppType = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}) => {
+const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
   return (
     <ConstrainedWidth>
       <Head>
@@ -22,9 +19,7 @@ const MyApp: AppType = ({
           src="https://plausible.io/js/plausible.js"
         ></script>
       </Head>
-      <SessionProvider session={session}>
-        <Component {...pageProps} />
-      </SessionProvider>
+      <Component {...pageProps} />
     </ConstrainedWidth>
   );
 };

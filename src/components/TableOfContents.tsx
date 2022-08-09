@@ -11,14 +11,15 @@ const TableOfContents = () => {
 
   return (
     <div
-      className="xl:col-span-3 mx-10  sticky "
+      className="xl:col-span-3 mx-10  sticky overflow-auto "
       style={{
-        top: "60px",
-        maxHeight: "calc(100vh - 90px)",
-        bottom: "30px",
+        top: "40px",
+        maxHeight: "calc(100vh - 130px)",
+        bottom: "60px",
       }}
     >
-      <div className="hidden xl:block xl:cursor-pointer xl:text-xl xl:py-10 xl:px-4">
+      <div className="hidden xl:block xl:cursor-pointer xl:text-xl xl:py-10 xl:px-4 ">
+        <p className="font-extrabold">Table Of Contents</p>
         <ul>
           <PostHeaderLink links={nestedHeadings} activeId={activeId} />
         </ul>
